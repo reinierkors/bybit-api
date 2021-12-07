@@ -96,13 +96,13 @@ export default abstract class BaseRestClient {
       ...this.globalRequestOptions,
       url: [this.baseUrl, endpoint].join(endpoint.startsWith('/') ? '' : '/'),
       method: method,
-      json: true
     };
 
     if (method === 'GET') {
       options.params = params;
     } else {
-      options.data = params;
+      options.data = require('querystring').stringify(params);
+      options.headers = { ...options.headers, 'content-type': 'application/x-www-form-urlencoded' };
     }
 
     return axios(options).then(response => {
